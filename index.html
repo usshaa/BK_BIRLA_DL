@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AE & VAE Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f5f5f5; }
+    h1 { margin-top: 20px; }
+    .tab { margin: 20px; display: inline-block; padding: 10px 20px; cursor: pointer; background: #ddd; border-radius: 5px; }
+    .tab.active { background: #4CAF50; color: white; }
+    .content { display: none; margin-top: 20px; }
+    .content.active { display: block; }
+    #canvas { border: 2px solid #333; margin-top: 10px; background: white; }
+    .slider { width: 200px; margin: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>Autoencoder vs Variational Autoencoder Demo</h1>
+  <div>
+    <span class="tab active" onclick="showTab('ae')">Autoencoder</span>
+    <span class="tab" onclick="showTab('vae')">VAE</span>
+  </div>
+
+  <!-- AE Demo -->
+  <div id="ae" class="content active">
+    <h2>Autoencoder: Compression & Reconstruction</h2>
+    <canvas id="canvasAE" width="300" height="150"></canvas>
+    <p>Shows input → compressed latent → reconstructed output.</p>
+  </div>
+
+  <!-- VAE Demo -->
+  <div id="vae" class="content">
+    <h2>VAE: Latent Space Exploration</h2>
+    <canvas id="canvasVAE" width="300" height="150"></canvas>
+    <br>
+    <input type="range" min="-3" max="3" value="0" step="0.1" class="slider" id="slider1">
+    <label for="slider1">Latent Dim 1</label><br>
+    <input type="range" min="-3" max="3" value="0" step="0.1" class="slider" id="slider2">
+    <label for="slider2">Latent Dim 2</label>
+    <p>Move sliders to see how latent variables generate different outputs.</p>
+  </div>
+
+  <script>
+    // Tab switching
+    function showTab(tabId) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // --- Autoencoder Demo ---
+    const ctxAE = document.getElementById("canvasAE").getContext("2d");
+    function drawAE() {
+      ctxAE.clearRect(0, 0, 300, 150);
+      ctxAE.fillStyle = "#2196F3"; // input
+      ctxAE.fillRect(20, 40, 40, 70);
+      ctxAE.fillStyle = "#4CAF50"; // latent
+      ctxAE.fillRect(130, 65, 20, 20);
+      ctxAE.fillStyle = "#FF5722"; // output
+      ctxAE.fillRect(240, 40, 40, 70);
+
+      ctxAE.font = "12px Arial";
+      ctxAE.fillStyle = "black";
+      ctxAE.fillText("Input", 25, 30);
+      ctxAE.fillText("Latent", 120, 60);
+      ctxAE.fillText("Output", 240, 30);
+    }
+    drawAE();
+
+    // --- VAE Demo ---
+    const ctxVAE = document.getElementById("canvasVAE").getContext("2d");
+    function drawVAE(z1, z2) {
+      ctxVAE.clearRect(0, 0, 300, 150);
+      ctxVAE.beginPath();
+      ctxVAE.arc(150, 75, 30 + z1 * 5, 0, 2 * Math.PI);
+      ctxVAE.fillStyle = `rgb(${150+z1*30}, ${200+z2*20}, 180)`;
+      ctxVAE.fill();
+
+      ctxVAE.font = "12px Arial";
+      ctxVAE.fillStyle = "black";
+      ctxVAE.fillText("Generated sample", 100, 20);
+    }
+
+    // Update VAE when sliders move
+    const s1 = document.getElementById("slider1");
+    const s2 = document.getElementById("slider2");
+    function updateVAE() {
+      drawVAE(parseFloat(s1.value), parseFloat(s2.value));
+    }
+    s1.oninput = updateVAE;
+    s2.oninput = updateVAE;
+    updateVAE();
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AE & VAE Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f5f5f5; }
+    h1 { margin-top: 20px; }
+    .tab { margin: 20px; display: inline-block; padding: 10px 20px; cursor: pointer; background: #ddd; border-radius: 5px; }
+    .tab.active { background: #4CAF50; color: white; }
+    .content { display: none; margin-top: 20px; }
+    .content.active { display: block; }
+    #canvas { border: 2px solid #333; margin-top: 10px; background: white; }
+    .slider { width: 200px; margin: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>Autoencoder vs Variational Autoencoder Demo</h1>
+  <div>
+    <span class="tab active" onclick="showTab('ae')">Autoencoder</span>
+    <span class="tab" onclick="showTab('vae')">VAE</span>
+  </div>
+
+  <!-- AE Demo -->
+  <div id="ae" class="content active">
+    <h2>Autoencoder: Compression & Reconstruction</h2>
+    <canvas id="canvasAE" width="300" height="150"></canvas>
+    <p>Shows input → compressed latent → reconstructed output.</p>
+  </div>
+
+  <!-- VAE Demo -->
+  <div id="vae" class="content">
+    <h2>VAE: Latent Space Exploration</h2>
+    <canvas id="canvasVAE" width="300" height="150"></canvas>
+    <br>
+    <input type="range" min="-3" max="3" value="0" step="0.1" class="slider" id="slider1">
+    <label for="slider1">Latent Dim 1</label><br>
+    <input type="range" min="-3" max="3" value="0" step="0.1" class="slider" id="slider2">
+    <label for="slider2">Latent Dim 2</label>
+    <p>Move sliders to see how latent variables generate different outputs.</p>
+  </div>
+
+  <script>
+    // Tab switching
+    function showTab(tabId) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // --- Autoencoder Demo ---
+    const ctxAE = document.getElementById("canvasAE").getContext("2d");
+    function drawAE() {
+      ctxAE.clearRect(0, 0, 300, 150);
+      ctxAE.fillStyle = "#2196F3"; // input
+      ctxAE.fillRect(20, 40, 40, 70);
+      ctxAE.fillStyle = "#4CAF50"; // latent
+      ctxAE.fillRect(130, 65, 20, 20);
+      ctxAE.fillStyle = "#FF5722"; // output
+      ctxAE.fillRect(240, 40, 40, 70);
+
+      ctxAE.font = "12px Arial";
+      ctxAE.fillStyle = "black";
+      ctxAE.fillText("Input", 25, 30);
+      ctxAE.fillText("Latent", 120, 60);
+      ctxAE.fillText("Output", 240, 30);
+    }
+    drawAE();
+
+    // --- VAE Demo ---
+    const ctxVAE = document.getElementById("canvasVAE").getContext("2d");
+    function drawVAE(z1, z2) {
+      ctxVAE.clearRect(0, 0, 300, 150);
+      ctxVAE.beginPath();
+      ctxVAE.arc(150, 75, 30 + z1 * 5, 0, 2 * Math.PI);
+      ctxVAE.fillStyle = `rgb(${150+z1*30}, ${200+z2*20}, 180)`;
+      ctxVAE.fill();
+
+      ctxVAE.font = "12px Arial";
+      ctxVAE.fillStyle = "black";
+      ctxVAE.fillText("Generated sample", 100, 20);
+    }
+
+    // Update VAE when sliders move
+    const s1 = document.getElementById("slider1");
+    const s2 = document.getElementById("slider2");
+    function updateVAE() {
+      drawVAE(parseFloat(s1.value), parseFloat(s2.value));
+    }
+    s1.oninput = updateVAE;
+    s2.oninput = updateVAE;
+    updateVAE();
+  </script>
+
+</body>
+</html>
